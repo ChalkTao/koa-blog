@@ -1,0 +1,17 @@
+# Logs
+*.log
+logs/*.log*
+npm-debug.log*
+
+# Runtime data
+*.pid
+.tmp
+.sass-cache
+uploads
+
+###############
+.idea
+.DS_Store
+node_modules
+test_coverage
+private
