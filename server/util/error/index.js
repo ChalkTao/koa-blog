@@ -8,7 +8,7 @@ function errorHandleMiddle() {
 	    yield next;
 	  } catch (err) {
 	    this.status = err.status || 500;
-      console.log(err)
+      	console.log(err)
 	    let error_msg = err.message;
 	    if(err.errors && typeof(err.errors) === 'object'){
 	    	_.mapValues(err.errors, (item)=>{

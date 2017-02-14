@@ -30,20 +30,20 @@ router.post('/login', function*(next) {
             return ctx.body = info;
         }
         const token = auth.signToken(user._id);
-        ctx.body = {registered: user.status !== 0, token: token, uid: user._id};
+        ctx.body = {registered: user.status !== 0, token: token, user: user.userInfo};
     }).call(this, next)
 });
 
 router.post('/register', checkAdminPassword(), function*(next) {
     try {
-        const user = yield User.findOne({email: this.request.body.email});
-        if (user) {
+        const origin_user = yield User.findOne({email: this.request.body.email});
+        if (origin_user) {
             this.throw('用户已存在!', 422);
         }
-        const new_user = yield User.create(this.request.body);
-        const token = auth.signToken(new_user._id);
+        const user = yield User.create(this.request.body);
+        const token = auth.signToken(user._id);
         this.status = 200;
-        this.body = {token: token};
+        this.body = {token: token, user: user.userInfo};
     } catch (err) {
         this.throw(err);
     }

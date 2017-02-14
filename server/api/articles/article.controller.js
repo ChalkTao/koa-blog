@@ -1,49 +1,44 @@
 'use strict';
 const _ = require('lodash');
 const mongoose = require('mongoose');
-const Post = mongoose.model('Post');
+const Article = mongoose.model('Article');
 const Collection = mongoose.model('Collection');
 const Logs = mongoose.model('Log');
 const config = require('../../config/env');
 const userField = 'nickname avatar occupation gender college birthPlace'
 
-exports.createRoom = function *() {
-    let room = new Room();
-  room.user = this.req.user._id
-  this.status = 200;
-	this.body = {data: room};
-}
+exports.createArticle = function *() {
+    let article = new Article();
+    article.user = this.req.user._id;
+    this.status = 200;
+	this.body = {data: article};
+};
 
-exports.getRoom = function *() {
+exports.getArticle = function *() {
   const id = this.params.id;
 	try{
-		let room = yield Room.findOne({_id: id}).populate('user', userField).exec();
-    room = room.toObject();
-    if(this.req.user) {
-      const star = yield Collection.findOne({room: id, user: this.req.user._id}).exec();
-      room.isStar = !!star;
-    }
+		let article = yield Article.findOne({_id: id}).populate('user', userField).exec();
+        article = article.toObject();
 		this.status = 200;
-		this.body = {data: room};
+		this.body = {data: article};
 	}catch(err){
 		this.throw(err);
 	}
-}
+};
 
-exports.updateRoom = function *() {
-  const id = this.params.id;
-  let data = _.pick(this.request.body, ['title', 'address', 'user', 'gender', 'rent', 'photos', 'description', 'available_date', 'contact_type', 'contact_account', 'poi_id', 'poi_name', 'poi_address', 'poi_location']);
-  data.updated = new Date();
-  data.gender = data.gender || "u";
-  data.available_gender = data.gender==="u"? ["f", "m"] : [data.gender]
+exports.updateArticle = function *() {
+    const id = this.params.id;
+    let data = _.pick(this.request.body, ['title', 'content', 'category', 'publish', 'labels']);
+    data.user = this.req.user._id;
+    data.updated = new Date();
 	try{
-		const room = yield Room.findByIdAndUpdate({_id: id}, {$set: data}, {upsert: true, new: false, setDefaultsOnInsert: true});
+		const article = yield Article.findByIdAndUpdate({_id: id}, {$set: data}, {upsert: true, new: false, setDefaultsOnInsert: true});
 		this.status = 200;
 		this.body = {success: true};
 	}catch(err){
 		this.throw(err);
 	}
-}
+};
 
 exports.updateRoomStatus = function *() {
   const id = this.params.id;
