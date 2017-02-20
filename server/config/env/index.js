@@ -13,6 +13,12 @@ var all = {
     options: {
       db: {
         safe: true
+      },
+      server: {
+        socketOptions: {
+          socketTimeoutMS: 0,
+          connectTimeoutMS: 0
+        }
       }
     }
   },

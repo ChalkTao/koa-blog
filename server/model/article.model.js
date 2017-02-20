@@ -15,5 +15,5 @@ let ArticleSchema = new Schema({
 });
 
 ArticleSchema.set('toObject', { virtuals: true });
-ArticleSchema.index({category: 1});
+ArticleSchema.index({title: "text"});
 module.exports = mongoose.model('Article', ArticleSchema);

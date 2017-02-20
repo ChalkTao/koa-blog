@@ -3,14 +3,16 @@
 var Router = require("koa-router")();
 var users = require('./api/users');
 var articles = require('./api/articles');
-var collections = require('./api/collections');
+var tasks = require('./api/tasks');
+var goals = require('./api/goals');
 var configs = require('./api/configs');
 var auth = require('./auth');
 
 module.exports = function(app) {
     Router.use('/user', users.routes(), users.allowedMethods());
     Router.use('/article', articles.routes(), articles.allowedMethods());
-    Router.use('/collection', collections.routes(), collections.allowedMethods());
+    Router.use('/task', tasks.routes(), tasks.allowedMethods());
+    Router.use('/goal', goals.routes(), goals.allowedMethods());
     Router.use('/auth', auth.routes(), auth.allowedMethods());
     Router.use('/config', configs.routes(), configs.allowedMethods());
 	Router.get("/*", function *() {

@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Logs = mongoose.model('Log');
 const MessageBox = mongoose.model('MessageBox');
-const Collection = mongoose.model('Collection');
 const ccap = require('ccap')();
 const config = require('../../config/env');
 
@@ -15,7 +14,7 @@ exports.getCaptcha = function *() {
 	this.session.captcha = txt;
 	this.status = 200;
 	this.body = buf;
-}
+};
 
 exports.getMe = function *() {
   const user = this.req.user;
@@ -34,7 +33,7 @@ exports.getMe = function *() {
 	}catch(err){
 		this.throw(err);
 	}
-}
+};
 
 exports.getUser = function *() {
 	const userId = this.params._id;
@@ -46,7 +45,7 @@ exports.getUser = function *() {
 	}catch(err){
 		this.throw(err);
 	}
-}
+};
 
 exports.updateUser = function *() {
   const user = this.req.user;
@@ -57,4 +56,4 @@ exports.updateUser = function *() {
   }catch(err){
     this.throw(err);
   }
-}
+};
