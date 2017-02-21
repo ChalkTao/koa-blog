@@ -27,14 +27,26 @@ exports.extractImage = function(content) {
 		}
 	}
 	return results;
-}
+};
 
 exports.minutesAfter = function(now, minute) {
   var t = new Date(now);
   t.setMinutes(t.getMinutes() + minute);
   return t;
-}
+};
 
 exports.equal = function(obj1, obj2) {
   return String(obj1) === String(obj2);
+};
+
+exports.formatDate = function(time) {
+	let tmpDate = new Date(time);
+	let year = tmpDate.getFullYear();
+	let month = fill(tmpDate.getMonth() + 1);
+	let day = fill(tmpDate.getDate());
+	return year + '-' + month + '-' + day;
+};
+
+function fill(num) {
+	return num >= 10 ? num : '0' + num;
 }

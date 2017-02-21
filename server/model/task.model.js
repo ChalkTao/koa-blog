@@ -19,6 +19,7 @@ let TaskSchema = new Schema({
         score: Number
     }],
     state: String,
+    scheduled: {type: Boolean, default: false},
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now }
 });
