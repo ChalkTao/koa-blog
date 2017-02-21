@@ -166,17 +166,114 @@ exports.getCalendar = function *() {
         let tasks = res.filter(item => {
             return item.tasks.length > 0 || item.finished.length>0;
         }).map(item => {
-            var total = item.tasks.length + item.finished.length
+            var total = item.tasks.length + item.finished.length;
+            var remain = item.tasks.length;
+            var label = 'fail';
+            if(remain / total <= 0.2) {
+                label = 'success';
+            }
             return {
                 title: '任务: ' + item.tasks.length + '/' + total,
                 start: item.date,
-                end: item.date
+                end: item.date,
+                cssClass: ['task', label]
             }
         });
-        console.log(tasks);
-        let events = _.concat(tasks);
+        let scores = res.filter(item => {
+            return item.scores.length > 0
+        }).map(item => {
+            var score = item.scores.reduce((c, i) => {return i.score + c;}, 0);
+            var label = score > 0 ? 'success' : 'fail';
+            return {
+                title: '评分: ' + score,
+                start: item.date,
+                end: item.date,
+                cssClass: ['score', label]
+            }
+        });
+        let states = res.filter(item => {
+            return item.state && item.state.length > 0;
+        }).map(item => {
+            return {
+                title: '日记',
+                start: item.date,
+                end: item.date,
+                cssClass: 'state'
+            }
+        });
+        let important = res.filter(item => {
+            return item.tasks.length > 0;
+        }).reduce((origin, item)=> {
+            var temp = item.tasks.filter(i => {
+                return i.category === '重要';
+            }).map(i => {
+                console.log(i);
+                return {
+                    title: i.content,
+                    start: item.date,
+                    end: item.date,
+                    cssClass: ['task', 'important']
+                }
+            });
+            return _.concat(origin, temp);
+        }, []);
+        let events = _.concat(important, states, scores, tasks);
+        console.log(events);
         this.status = 200;
         this.body = {data: events};
+    }catch(err){
+        this.throw(err);
+    }
+};
+
+exports.getChartData = function *() {
+    const userId = this.req.user._id;
+    try{
+        let res = yield Task.find({user: userId, date: {
+            $gte: this.query.start,
+            $lte: this.query.end
+        }}).exec();
+        let undo = 0; let done = 0;
+        res.filter(item => {
+            return item.tasks.length > 0 || item.finished.length>0;
+        }).forEach(item => {
+            undo += item.tasks.length;
+            done += item.finished.length;
+        });
+        let taskDonut = [{label: '未完成', value: undo}, {label: '已完成', value: done}];
+        let taskLine = res.map(item => {
+            return {
+                date: item.date,
+                finish: item.finished.length,
+                total: item.tasks.length + item.finished.length
+            }
+        });
+
+        let plus = 0; let minus = 0;
+        res.filter(item => {
+            return item.scores.length > 0
+        }).forEach(item => {
+            item.scores.forEach(i => {
+                if(i.score > 0) {plus += i.score;} else {minus += -i.score;}
+            })
+        });
+        let scoreDonut = [{label: '减分', value: minus}, {label: '加分', value: plus}];
+        let scoreLine = res.map(item => {
+            var score = item.scores.reduce((c, i) => {return i.score + c;}, 0);
+            return {
+                date: item.date,
+                score: score
+            }
+        });
+        console.log(scoreLine)
+
+        this.status = 200;
+        this.body = {
+            taskDonut: taskDonut,
+            taskLine: taskLine,
+            scoreDonut: scoreDonut,
+            scoreLine: scoreLine
+        };
     }catch(err){
         this.throw(err);
     }

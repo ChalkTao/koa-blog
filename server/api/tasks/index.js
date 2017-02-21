@@ -11,4 +11,5 @@ router.post('/schedule/:date', auth.isAuthenticated(), controller.createSchedule
 router.get('/schedule/:date', auth.isAuthenticated(), controller.getSchedule);
 router.put('/schedule/:id', auth.isAuthenticated(), controller.updateSchedule);
 router.get('/calendar', auth.isAuthenticated(), controller.getCalendar);
+router.get('/chart', auth.isAuthenticated(), controller.getChartData);
 module.exports = router;
