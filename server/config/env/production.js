@@ -7,10 +7,10 @@ module.exports = {
   //生产环境mongodb配置
   mongo: {
     uri: 'mongodb://localhost/blog',
-    options: {
-      user:'user',          //生产环境用户名
-      pass:'pass'           //生产环境密码
-    }
+    // options: {
+    //   user:'user',          //生产环境用户名
+    //   pass:'pass'           //生产环境密码
+    // }
   },
   //生产环境redis配置
   redis: {
