@@ -68,19 +68,7 @@ var all = {
   },
   local:{
     admin:"254256"
-  },
-  //移动APP列表
-  apps:[
-    {
-      name:'React Native',
-      gitUrl:'http://github.com/jackhutu/jackblog-react-native-redux',
-      downloadUrl:{
-        android:'http://a.app.qq.com/o/simple.jsp?pkgname=top.jackhu.reactnative',
-        ios:''
-      },
-      qrcode:'http://upload.jackhu.top/qrcode/jackblog-react-native-qrcode.png'
-    }
-  ]
+  }
 };
 
 var config = _.merge(all,require('./' + process.env.NODE_ENV + '.js') || {});

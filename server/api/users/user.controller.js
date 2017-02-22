@@ -4,17 +4,17 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Logs = mongoose.model('Log');
 const MessageBox = mongoose.model('MessageBox');
-const ccap = require('ccap')();
+// const ccap = require('ccap')();
 const config = require('../../config/env');
 
-exports.getCaptcha = function *() {
-	const ary = ccap.get();
-	const txt = ary[0];
-	const buf = ary[1];
-	this.session.captcha = txt;
-	this.status = 200;
-	this.body = buf;
-};
+// exports.getCaptcha = function *() {
+// 	const ary = ccap.get();
+// 	const txt = ary[0];
+// 	const buf = ary[1];
+// 	this.session.captcha = txt;
+// 	this.status = 200;
+// 	this.body = buf;
+// };
 
 exports.getMe = function *() {
   const user = this.req.user;
