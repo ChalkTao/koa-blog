@@ -36,9 +36,9 @@ var all = {
   userRoles: ['user', 'admin'],
   //七牛配置
   qiniu:{
-    app_key:'ikik9rVYFdu9DoF3_M83CS1qlWCO3Mou6N0GqGNd',
-    app_secret:'DHqROc5aIwhxHqGUamhfU3iSQKApBTrKmuGjax0a',
-    domain:'http://obonyegj8.bkt.clouddn.com/',
+    app_key:'YQ1W_2xsus2q5heyb3eqCakfKSi0iK8e14IA6P5F',
+    app_secret:'RLiaNusSZXC4kIysUBizixK3BiCmlh2M1fIIH938',
+    domain:'http://7xnzon.com1.z0.glb.clouddn.com/',
     bucket:'blog'
   },
   amap: {

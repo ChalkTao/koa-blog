@@ -15,7 +15,7 @@ module.exports = function(app) {
     Router.use('/goal', goals.routes(), goals.allowedMethods());
     Router.use('/auth', auth.routes(), auth.allowedMethods());
     Router.use('/config', configs.routes(), configs.allowedMethods());
-	Router.get("/*", function *() {
+	Router.get('/*', function *() {
 	  this.body = {status:'success',data:'Not Found'};
 	});
 	app.use(Router.routes());

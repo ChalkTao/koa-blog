@@ -46,7 +46,7 @@ exports.fetch = function (url,key) {
 		result.url = config.qiniu.domain + result.key;
 		return result;
 	});
-}
+};
 
 //上传文件
 exports.upload = function (path,key) {
@@ -56,7 +56,7 @@ exports.upload = function (path,key) {
 		result.url = config.qiniu.domain + result.key;
     return result;
   });
-}
+};
 
 //将源空间的指定资源移动到目标空间，或在同一空间内对资源重命名。
 exports.move = function(keySrc,keyDest){
