@@ -87,7 +87,7 @@ exports.getUserArticle = function *() {
     console.log(options);
     try{
         let articleList = yield Article.find(options)
-            .populate('user', userField).limit(limit).skip(offset).exec();
+            .populate('user', userField).sort({created: -1}).limit(limit).skip(offset).exec();
         let count = yield Article.count(options).exec();
         this.status = 200;
         this.body = {data: articleList, count: count, limit: limit};
