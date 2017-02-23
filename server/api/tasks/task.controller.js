@@ -245,7 +245,7 @@ exports.getChartData = function *() {
             return {
                 date: item.date,
                 finish: item.finished.length,
-                total: item.tasks.length + item.finished.length
+                task: item.tasks.length
             }
         });
 
