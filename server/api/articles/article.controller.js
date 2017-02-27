@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
 const Logs = mongoose.model('Log');
 const config = require('../../config/env');
-const userField = 'nickname avatar occupation gender college birthPlace'
+const markdown = require( "markdown" ).markdown;
+const userField = 'nickname avatar occupation gender college birthPlace';
 
 exports.createArticle = function *() {
     let article = new Article();
@@ -32,7 +33,10 @@ exports.updateArticle = function *() {
     data.updated = new Date();
 	try{
 		const article = yield Article.findByIdAndUpdate({_id: id}, {$set: data}, {upsert: true, new: false, setDefaultsOnInsert: true});
-		this.status = 200;
+        if(data.publish && !article.published) {
+            yield article.update({_id: id}, {$set: {published: new Date()}});
+        }
+        this.status = 200;
 		this.body = {success: true};
 	}catch(err){
 		this.throw(err);
@@ -45,8 +49,11 @@ exports.updateArticleStatus = function *() {
 	  delete this.request.body._id;
 	}
 	try{
-		const article = yield Article.findByIdAndUpdate({_id: id, user: this.req.user._id}, {$set: {status: this.request.body.status}});
-		this.status = 200;
+		const article = yield Article.findByIdAndUpdate({_id: id, user: this.req.user._id}, {$set: {publish: this.request.body.publish}});
+        if(this.request.body.publish && !article.published) {
+            yield article.update({_id: id}, {$set: {published: new Date()}});
+        }
+        this.status = 200;
 		this.body = {data: article};
 	}catch(err){
 		this.throw(err);
@@ -110,6 +117,38 @@ exports.getCategory = function *() {
         });
         this.status = 200;
         this.body = {data: category};
+    }catch(err){
+        this.throw(err);
+    }
+};
+
+exports.getFrontArticle = function *() {
+    const uid = this.params.uid;
+    try{
+        let options = {
+            user: uid,
+            publish: true
+        };
+        if(this.query.category) {
+            options.category = this.query.category;
+        }
+        if(this.query.label) {
+            options.labels = {'$elemMatch': {'$eq': this.query.label}}
+        }
+        let limit = Math.min(this.query.limit || 20, 50);
+        let page = this.query.page-1 || 0;
+        let offset = page * limit;
+        console.log(options);
+        let articleList = yield Article.find(options)
+            .populate('user', userField).sort({published: -1}).limit(limit).skip(offset).exec();
+        let count = yield Article.count(options).exec();
+        articleList = articleList.map(item => {
+            item = item.toObject();
+            item.content = markdown.toHTML(item.content);
+            return item;
+        });
+        this.status = 200;
+        this.body = {data: articleList, count: count, limit: limit};
     }catch(err){
         this.throw(err);
     }

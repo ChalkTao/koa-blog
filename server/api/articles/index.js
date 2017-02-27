@@ -8,6 +8,7 @@ router.delete('/:id', auth.isAuthenticated(), controller.deleteArticle);
 router.put('/status/:id', auth.isAuthenticated(), controller.updateArticleStatus);
 router.get('/category/:uid', auth.mayAuthenticated(), controller.getCategory);
 router.get('/user/:uid', auth.mayAuthenticated(), controller.getUserArticle);
+router.get('/front/:uid', auth.mayAuthenticated(), controller.getFrontArticle);
 router.get('/new', auth.isAuthenticated(), controller.createArticle);
 router.get('/:id', auth.mayAuthenticated(), controller.getArticle);
 

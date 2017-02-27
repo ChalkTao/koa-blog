@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Logs = mongoose.model('Log');
-const MessageBox = mongoose.model('MessageBox');
 // const ccap = require('ccap')();
 const config = require('../../config/env');
 
@@ -35,6 +34,18 @@ exports.getMe = function *() {
 	}
 };
 
+exports.getUserByName = function *() {
+    const name = this.params.name;
+    try{
+        const user = yield User.findOne({nickname: name});
+        if(!user) this.throw('UserNotFound',404);
+        this.status = 200;
+        this.body = user.userInfo;
+    }catch(err){
+        this.throw(err);
+    }
+};
+
 exports.getUser = function *() {
 	const userId = this.params._id;
 	try{
@@ -45,6 +56,19 @@ exports.getUser = function *() {
 	}catch(err){
 		this.throw(err);
 	}
+};
+
+exports.getUsers = function *() {
+    try{
+        let users = yield User.find({}).limit(20)
+        users = users.map(item => {
+            return item.userInfo;
+        });
+        this.status = 200;
+        this.body = {data: users};
+    }catch(err){
+        this.throw(err);
+    }
 };
 
 exports.updateUser = function *() {

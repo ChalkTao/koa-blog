@@ -10,6 +10,7 @@ let ArticleSchema = new Schema({
   labels: [String],
 
   publish: { type: Boolean, default: false },
+  published: { type: Date, default: null },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now }
 });

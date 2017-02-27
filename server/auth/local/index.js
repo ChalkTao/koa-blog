@@ -36,9 +36,16 @@ router.post('/login', function*(next) {
 
 router.post('/register', checkAdminPassword(), function*(next) {
     try {
-        const origin_user = yield User.findOne({email: this.request.body.email});
+        if (this.request.body.nickname === 'admin') {
+            this.throw('用户名非法', 422)
+        }
+        let origin_user = yield User.findOne({email: this.request.body.email});
         if (origin_user) {
             this.throw('用户已存在!', 422);
+        }
+        origin_user = yield User.findOne({nickname: this.request.body.nickname});
+        if (origin_user) {
+            this.throw('用户昵称已被注册!', 422);
         }
         const user = yield User.create(this.request.body);
         const token = auth.signToken(user._id);
