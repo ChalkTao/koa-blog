@@ -105,6 +105,10 @@ exports.getUserArticle = function *() {
 
 exports.getCategory = function *() {
     const userId = this.params.uid;
+    let options = {$match: {user: new mongoose.Types.ObjectId(userId)}};
+    if(!this.req.user || this.req.user._id !== userId) {
+        options.publish = true;
+    }
     try{
         let category = yield Article.aggregate(
             {$match: {user: new mongoose.Types.ObjectId(userId)}},
