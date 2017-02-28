@@ -4,7 +4,12 @@ const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
 const Logs = mongoose.model('Log');
 const config = require('../../config/env');
-const markdown = require( "markdown" ).markdown;
+var hljs = require('highlight.js');
+var md = require('markdown-it')({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+});
 const userField = 'nickname avatar occupation gender college birthPlace';
 
 exports.createArticle = function *() {
@@ -148,7 +153,7 @@ exports.getFrontArticle = function *() {
         let count = yield Article.count(options).exec();
         articleList = articleList.map(item => {
             item = item.toObject();
-            item.content = markdown.toHTML(item.content);
+            item.content = md.render(item.content);
             return item;
         });
         this.status = 200;
